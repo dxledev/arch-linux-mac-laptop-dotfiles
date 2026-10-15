@@ -1,0 +1,162 @@
+"$schema" = "https://starship.rs/config-schema.json"
+
+command_timeout = 1500
+
+format = """
+[](fg:color_bg1)\
+$os\
+$username\
+$hostname\
+[ ](fg:color_bg1 bg:color_bg2)\
+$directory\
+[ ](fg:color_bg2 bg:color_bg3)\
+$git_branch\
+$git_status\
+[ ](fg:color_bg3 bg:color_bg4)\
+$c\
+$dotnet\
+$java\
+$kotlin\
+$nodejs\
+[ ](fg:color_bg4 bg:color_bg5)\
+$cmd_duration\
+[ ](fg:color_bg5)\
+\n$character\
+"""
+
+palette = "normal"
+
+[palettes.normal]
+color_bg1 = "bright-blue"
+color_bg2 = "blue"
+color_bg3 = "green"
+color_bg4 = "bright-black"
+color_bg5 = "purple"
+
+color_blue = "bright-blue"
+color_gray = "bright-black"
+color_red = "bright-red"
+color_white = "white"
+
+[character]
+error_symbol = "[❯](bold color_red)"
+success_symbol = "[❯](bold color_blue)"
+
+[cmd_duration]
+format = "[$duration](bg:color_bg5 fg:black)"
+min_time = 500
+
+[directory]
+style = "bg:color_bg2 fg:black"
+format = "[$path]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+[git_branch]
+symbol = ""
+style = "bg:color_bg3 fg:black"
+format = "[$symbol $branch]($style)"
+
+[git_status]
+ahead = "⇡${count}"
+behind = "⇣${count}"
+deleted = ""
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+format = '[( $all_status$ahead_behind)]($style)'
+style = "bold bg:color_bg3 fg:color_red"
+
+[hostname]
+format = "[@$hostname]($style)"
+ssh_only = true
+ssh_symbol = " "
+style = "bg:color_bg1 fg:black"
+
+[os]
+format = "[$symbol]($style)"
+style = "bg:color_bg1 fg:black"
+disabled = false
+
+[username]
+disabled = false
+format = "[$user]($style)"
+show_always = false
+style_root = "bg:color_bg1 fg:color_red"
+style_user = "bg:color_bg1 fg:color_white"
+
+# Code symbols
+[c]
+format = '[$symbol]($style)'
+style = "bg:color_bg4 fg:blue"
+symbol = " "
+
+[dotnet]
+format = '[$symbol]($style)'
+style = "bg:color_bg4 fg:bright-purple"
+symbol = " "
+
+[java]
+format = '[$symbol]($style)'
+style = "bg:color_bg4 fg:yellow"
+symbol = " "
+
+[kotlin]
+format = '[$symbol]($style)'
+style = "bg:color_bg4 fg:bright-yellow"
+symbol = " "
+
+[nodejs]
+style = "bg:color_bg4 fg:yellow"
+format = '[$symbol($version)]($style)'
+symbol = " "
+
+# OS Symbols
+[os.symbols]
+Alpaquita = " "
+Alpine = " "
+AlmaLinux = " "
+Amazon = " "
+Android = " "
+Arch = " "
+Artix = " "
+CentOS = " "
+Debian = " "
+DragonFly = " "
+Emscripten = " "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = " "
+Garuda = "󰛓 "
+Gentoo = " "
+HardenedBSD = "󰞌 "
+Illumos = "󰈸 "
+Kali = " "
+Linux = " "
+Mabox = " "
+Macos = " "
+Manjaro = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+OpenBSD = "󰈺 "
+openSUSE = " "
+OracleLinux = "󰌷 "
+Pop = " "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+RockyLinux = " "
+Redox = "󰀘 "
+Solus = "󰠳 "
+SUSE = " "
+Ubuntu = " "
+Unknown = " "
+Void = " "
+Windows = "󰍲 "

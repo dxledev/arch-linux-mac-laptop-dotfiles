@@ -1,0 +1,8 @@
+# Render the resolved palette, then publish a validated Alacritty theme.
+# Keep the built-in Alacritty template enabled; its output is not imported.
+[theme.templates.user.alacritty_contrast]
+input_path = "$XDG_CONFIG_HOME/noctalia/templates/alacritty-palette.toml"
+output_path = "$XDG_STATE_HOME/noctalia/alacritty/palette.toml"
+post_hook = '/usr/bin/python3 "{{ config_dir }}/scripts/alacritty-contrast.py"'
+hook_async = false
+

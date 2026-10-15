@@ -1,0 +1,84 @@
+export EDITOR=nvim
+export PATH="$HOME/bin:$PATH"
+export PATH="/opt/dart-2.19/bin:$PATH"
+
+export NVM_DIR="$HOME/.nvm"
+
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+export BASH_ENV="$HOME/.bash_env"
+export PATH="$PATH:/home/dxle/.local/bin"
+export PATH="$PATH:/home/dxle/.spicetify"
+export PATH="$PATH:/home/dxle/.cargo/bin"
+export PATH="$PATH:/home/dxle/bin/dev"
+export PATH="$PATH:/home/dxle/bin/dev/cpp"
+export PATH="$PATH:/home/dxle/bin/theme-generating"
+export PATH="$PATH:/home/dxle/bin/media-controls"
+export PATH="$PATH:/home/dxle/bin/job-hunting"
+
+if [[ -n ${SSH_AUTH_SOCK:-} && ! -S "$SSH_AUTH_SOCK" ]]; then
+  unset SSH_AUTH_SOCK
+fi
+if [[ -z ${SSH_AUTH_SOCK:-} && -n ${XDG_RUNTIME_DIR:-} && -S "$XDG_RUNTIME_DIR/ssh-agent.socket" ]]; then
+  export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+fi
+
+export EZA_COLORS="\
+fi=37:di=34:ln=36:pi=90:so=90:bd=31:cd=31:or=31:sp=34:mp=36:\
+ur=97:uw=93:ux=32:ue=32:gr=37:gw=93:gx=32:tr=34:tw=93:tx=32:su=34:sf=90:xa=34:\
+df=34:ds=36:\
+nb=97:nk=34:nm=36:ng=94:nt=94:ub=34:uk=36:um=94:ug=94:ut=36:\
+uu=97:uR=31:un=34:gu=37:gR=31:gn=90:\
+lc=36:lm=36:\
+ga=32:gm=93:gd=31:gv=36:gt=35:gi=90:gc=33:\
+Gm=97:Go=34:Gc=32:Gd=31:\
+xx=90:da=35:in=34:bl=94:hd=97:lp=36:cc=36:bO=90:ff=94:\
+im=93:vi=31:mu=32:lo=36:cr=90:do=37:co=35:tm=93:cm=36:bu=90:sc=34"
+
+export THEMES=/home/dxle/.config/themes
+export CURRENT_THEME=/home/dxle/.config/themes/current
+
+export WALLPAPERS=/home/dxle/files/pictures/wallpapers
+
+export CURRSEM=/home/dxle/dev/coding-in-class/spring2026
+
+export DESKTOP_APPS=/usr/share/applications
+export DESKTOP_ICONS=/home/dxle/.local/share/icons
+
+export BROWSER=brave
+
+export LOX_DEV=/home/dxle/dev/coding-in-class/spring2026/4080CS/lox-dev/lox/com/craftinginterpreters/lox
+
+export EDITOR=nvim
+export VISUAL=nvim
+
+export CODING=/home/dxle/dev/coding
+export LEETCODE=/home/dxle/dev/coding/leetcode
+export LC=/home/dxle/dev/coding/leetcode
+export PORTFOLIO=/home/dxle/dev/web-apps/portfolio
+
+export DOWNLOADS=~/files/downloads
+export PICTURES=~/files/pictures
+export SCREENSHOTS=~/files/pictures/screenshots/
+export DOCUMENTS=~/files/documents
+export TRASH=~/.local/share/Trash
+
+export ICONS=~/.local/share/icons
+export GLOBAL_ICONS=/usr/share/icons
+
+export TERMINAL="ghostty"
+
+export VIDEO_PLAYER="mpv"
+export VIDEOS="/home/dxle/files/videos"
+
+export APPLICATIONS="/usr/share/applications"
+
+export GOPATH="$HOME/builds/go"
+export GOMODCACHE="$GOPATH/pkg/mod"
+
+export OBS_WEBSOCKET_URL="obsws://localhost:4455/OJaIW5hECIC73gYI"
+
+export KEYBINDINGS="$HOME/.config/hypr/keybindings.conf"
+
+export QT_QPA_PLATFORMTHEME=qt6ct
+export FZF_DEFAULT_OPTS="--ansi"

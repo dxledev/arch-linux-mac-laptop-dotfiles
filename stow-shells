@@ -1,0 +1,159 @@
+#!/usr/bin/env python3
+"""Stow the imported shell files, preserving conflicts in .stow-backups/."""
+
+import argparse
+from datetime import datetime
+import os
+from pathlib import Path
+import shutil
+import signal
+import stat
+import subprocess
+import sys
+import tempfile
+
+
+PACKAGES = {
+    "bash-files": (
+        ".bash_aliases", ".bash_env", ".bash_functions", ".bash_login",
+        ".bash_logout", ".bash_profile", ".bashrc",
+    ),
+    "zsh-files": (".zprofile", ".zshrc"),
+}
+
+
+def exists(path):
+    return os.path.lexists(path)
+
+
+def linked_to(path, source):
+    return path.is_symlink() and os.path.realpath(path) == str(source)
+
+
+def stowed_link(path, source):
+    # GNU Stow requires relative links to identify files it already owns.
+    return linked_to(path, source) and os.readlink(path) == os.path.relpath(source, path.parent)
+
+
+def stop(signum, frame):
+    raise InterruptedError(f"Interrupted by signal {signum}")
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--target", type=Path, default=Path.home(),
+                        help="target directory (default: your home)")
+    parser.add_argument("--dry-run", action="store_true",
+                        help="validate and show the plan without changing the target")
+    args = parser.parse_args()
+    repository = Path(__file__).resolve().parent
+    target = args.target.expanduser().resolve(strict=True)
+    if not target.is_dir() or target == repository or repository in target.parents:
+        raise ValueError("Target must be an existing directory outside the Stow repository")
+    stow = shutil.which("stow")
+    if not stow:
+        raise ValueError("GNU Stow is required")
+
+    sources = {}
+    for package, names in PACKAGES.items():
+        package_dir = repository / package
+        if set(p.name for p in package_dir.iterdir()) != set(names):
+            raise ValueError(f"Unexpected package contents in {package}; review the manifest first")
+        for name in names:
+            source = package_dir / name
+            if not source.is_file() or source.is_symlink():
+                raise ValueError(f"Expected a regular source file: {source}")
+            sources[name] = source
+
+    conflicts = []
+    pending = []
+    for name, source in sources.items():
+        destination = target / name
+        if stowed_link(destination, source):
+            continue
+        pending.append(name)
+        if exists(destination):
+            mode = destination.lstat().st_mode
+            if not (stat.S_ISREG(mode) or stat.S_ISLNK(mode)):
+                raise ValueError(f"Refusing to replace a directory or special file: {destination}")
+            conflicts.append(name)
+
+    if not pending:
+        print(f"All {len(sources)} shell files are already stowed in {target}.")
+        return
+
+    def run_stow(destination, simulate=False):
+        command = [stow, f"--dir={repository}", f"--target={destination}", "--verbose"]
+        if simulate:
+            command.append("--simulate")
+        subprocess.run(command + list(PACKAGES), check=True, cwd=repository)
+
+    if args.dry_run:
+        for name in conflicts:
+            print(f"Would back up: {target / name}", flush=True)
+        # Check the packages against a clean target, representing the state after backup.
+        with tempfile.TemporaryDirectory(prefix="stow-shells-check-") as staging:
+            run_stow(staging, simulate=True)
+        print(f"Ready to link {len(pending)} files in {target}; target unchanged.")
+        return
+
+    backup_dir = None
+    for signum in (signal.SIGINT, signal.SIGTERM):
+        signal.signal(signum, stop)
+    try:
+        if conflicts:
+            backup_root = repository / ".stow-backups"
+            if backup_root.is_symlink():
+                raise ValueError("Refusing to use a symlink as the backup directory")
+            backup_root.mkdir(mode=0o700, exist_ok=True)
+            backup_root.chmod(0o700)
+            stamp = datetime.now().strftime("%Y%m%d-%H%M%S-")
+            backup_dir = Path(tempfile.mkdtemp(prefix=stamp, dir=backup_root))
+            for name in conflicts:
+                shutil.move(str(target / name), str(backup_dir / name))
+        # Stow performs its own full conflict check before any links are created.
+        run_stow(target, simulate=True)
+        run_stow(target)
+        if not all(linked_to(target / name, source) for name, source in sources.items()):
+            raise RuntimeError("Stow did not create all expected links")
+    except BaseException:
+        # Do not let a second interrupt stop restoration halfway through.
+        for signum in (signal.SIGINT, signal.SIGTERM):
+            signal.signal(signum, signal.SIG_IGN)
+        for name in pending:
+            destination = target / name
+            if name in conflicts and (backup_dir is None or not exists(backup_dir / name)):
+                continue
+            if stowed_link(destination, sources[name]):
+                try:
+                    destination.unlink()
+                except OSError as error:
+                    print(f"Could not remove {destination}: {error}", file=sys.stderr)
+        for name in reversed(conflicts):
+            if backup_dir is None or not exists(backup_dir / name):
+                continue
+            destination = target / name
+            if exists(destination):
+                print(f"Restore skipped: {destination} now exists; backup: {backup_dir / name}",
+                      file=sys.stderr)
+                continue
+            try:
+                shutil.move(str(backup_dir / name), str(destination))
+            except OSError as error:
+                print(f"Could not restore {destination}: {error}; backup: {backup_dir / name}",
+                      file=sys.stderr)
+        if backup_dir is not None and any(backup_dir.iterdir()):
+            print(f"Preserved backups: {backup_dir}", file=sys.stderr)
+        raise
+
+    print(f"Stowed all {len(sources)} shell files in {target}.")
+    if backup_dir is not None:
+        print(f"Original files saved in {backup_dir}")
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except (OSError, ValueError, RuntimeError, subprocess.CalledProcessError, KeyboardInterrupt) as error:
+        print(f"stow-shells: {error}", file=sys.stderr)
+        sys.exit(1)

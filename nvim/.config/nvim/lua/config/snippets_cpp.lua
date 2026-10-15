@@ -1,0 +1,250 @@
+local ls = require("luasnip")
+local s = ls.snippet
+local t = ls.text_node
+local i = ls.insert_node
+local f = ls.function_node
+
+ls.add_snippets("cpp", {
+  s("prln", {
+    t("std::println("),
+    i(1),
+    t(");"),
+  }),
+})
+
+ls.add_snippets("cpp", {
+  s("stpr", {
+    t("std::print("),
+    i(1),
+    t(");"),
+  }),
+})
+
+ls.add_snippets("cpp", {
+  s("stdo", {
+    t("std::cout << "),
+    i(1),
+    t(";"),
+  }),
+})
+
+ls.add_snippets("cpp", {
+  s("stdon", {
+    t("std::cout << "),
+    i(1),
+    t(" << '\\n';"),
+  }),
+})
+
+ls.add_snippets("cpp", {
+  s("stdi", {
+    t("std::cin >> "),
+    i(1),
+    t(";"),
+  }),
+})
+
+ls.add_snippets("cpp", {
+  s("stdglws", {
+    t("std::getline(std::cin >> std::ws, "),
+    i(1),
+    t(");"),
+  }),
+})
+
+ls.add_snippets("cpp", {
+  s("stdgl", {
+    t("std::getline("),
+    i(1),
+    t(");"),
+  }),
+})
+
+ls.add_snippets("cpp", {
+  s("mainsnip", {
+    t({
+      "int main()",
+      "{",
+      "    ",
+    }),
+    i(1),
+    t({
+      "",
+      "",
+      "    return 0;",
+      "}",
+    }),
+  }),
+})
+
+ls.add_snippets("cpp", {
+  s("mainargs", {
+    t({
+      "int main(int argc, char* argv[])",
+      "{",
+      "    ",
+    }),
+    i(1),
+    t({
+      "",
+      "",
+      "    return 0;",
+      "}",
+    }),
+  }),
+})
+
+ls.add_snippets("cpp", {
+  s("doxygfuncall", {
+    t({
+      "/**",
+      " * @brief desc",
+    }),
+    i(1),
+    t({
+      "",
+      " * ",
+      " * detail",
+      " * ",
+      " * @param params",
+      " * @param params2",
+      " * @return return",
+      " * @throws error",
+      " */",
+    }),
+  }),
+})
+
+ls.add_snippets("cpp", {
+  s("doxygfunc", {
+    t({
+      "/**",
+      " * @brief desc",
+    }),
+    i(1),
+    t({
+      "",
+      " */",
+    })
+  })
+})
+
+ls.add_snippets("cpp", {
+  s("doxygh", {
+    t({
+      "/**",
+      " * @file header.h",
+    }),
+    i(1),
+    t({
+      "",
+      " * @brief purpose",
+      " * ",
+      " * detail",
+      " * ",
+      " * @author Jane Doe (email)",
+      " * @date",
+      " * @version x.x.x",
+      " */",
+    }),
+  }),
+})
+
+ls.add_snippets("cpp", {
+  s("doxysstart", {
+    t({
+      "/**",
+      " * @name ",
+    }),
+    i(1),
+    t({
+      "",
+      " * section desc",
+      " * @{",
+      " */",
+    }),
+  }),
+})
+
+ls.add_snippets("cpp", {
+  s("doxysend", {
+    t({
+      "/** @} */",
+    })
+  })
+})
+
+ls.config.set_config({
+  enable_autosnippets = true,
+})
+
+local function guard_name(_, snip)
+  return snip.captures[1]
+end
+
+local hdef = s(
+  {
+    trig = "([%w_]+)%s+hdef",
+    regTrig = true,
+    wordTrig = false,
+    snippetType = "autosnippet",
+    name = "header guard",
+  },
+  {
+    t({
+      "#pragma once",
+      "",
+      "#ifndef ",
+    }),
+    f(guard_name),
+
+    t({ "", "#define " }),
+    f(guard_name),
+
+    t({ "", "" }),
+    t({ "", "" }),
+    i(1),
+    t({ "", "" }),
+    t({ "", "#endif" }),
+  }
+)
+
+for _, ft in ipairs({ "c", "cpp" }) do
+  ls.add_snippets(ft, {
+    hdef,
+  })
+end
+
+local function namespace_open(_, snip)
+  local lines = {}
+  for _, name in ipairs(vim.split(snip.captures[1], "::", { plain = true })) do
+    lines[#lines + 1] = "namespace " .. name
+    lines[#lines + 1] = "{"
+  end
+  lines[#lines + 1] = ""
+  return lines
+end
+
+local function namespace_close(_, snip)
+  local lines = { "" }
+  for _ in ipairs(vim.split(snip.captures[1], "::", { plain = true })) do
+    lines[#lines + 1] = "}"
+  end
+  return lines
+end
+
+ls.add_snippets("cpp", {
+  s({
+    trig = "([%a_][%w_:]*)%s+nsdef",
+    regTrig = true,
+    wordTrig = false,
+    snippetType = "autosnippet",
+    name = "namespace definition",
+  }, {
+    f(namespace_open),
+    t({ "", "" }),
+    i(1),
+    t({ "", "" }),
+    f(namespace_close),
+  }),
+})

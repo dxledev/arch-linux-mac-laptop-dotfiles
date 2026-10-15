@@ -1,0 +1,169 @@
+format = """\
+[╭╴](fg:arrow)\
+$username\
+$directory\
+$time\
+(\
+    $git_branch\
+    $git_status\
+)\
+(\
+    $python\
+    $conda\
+    $nodejs\
+    $c\
+    $java\
+    $docker_context\
+    $rust\
+)\
+$cmd_duration
+[╰─](fg:arrow)$character\
+"""
+# Add the modules you need
+
+# Disables the blank line at the start of the prompt
+add_newline = true
+
+
+# Palettes:
+#   old: the previous version.
+#   normal: dark gray / yellow / white palette.
+#   light: pastel light colors.
+# To change the colors: change to the corresponding palette.
+palette = "normal"
+
+[palettes.normal]
+arrow = "bright-black"
+os = "cyan"
+os_admin = "yellow"
+directory = "bright-cyan"
+time = "bright-yellow"
+node = "bright-green"
+git = "green"
+git_status = "white"
+python = "yellow"
+conda = "bright-green"
+java = "bright-yellow"
+rust = "red"
+clang = "bright-cyan"
+duration = "red"
+text_color = "black"
+text_light = "white"
+
+[username]
+style_user = 'os'
+style_root = 'os_admin'
+format = '[]($style)[ $user](bg:$style fg:text_color)[]($style)'
+disabled = false
+show_always = true
+
+[character]
+success_symbol = "[󰍟](fg:arrow)"
+error_symbol = "[󰍟](fg:red)"
+
+[directory]
+format = " [](fg:directory)[  $path ]($style)[$read_only]($read_only_style)[](fg:directory)"
+truncation_length = 2
+style = "fg:text_color bg:directory"
+read_only_style = "fg:text_color bg:directory"
+before_repo_root_style = "fg:text_color bg:directory"
+truncation_symbol = "…/"
+truncate_to_repo = true
+read_only ="  "
+
+[time]
+disabled = false
+format = " [](fg:time)[ $time]($style)[](fg:time)"
+time_format = "%H:%M"
+style = "fg:text_color bg:time"
+
+[cmd_duration]
+format = " [](fg:duration)[ $duration]($style)[](fg:duration)"
+style = "fg:text_light bg:duration"
+min_time = 500
+
+[git_branch]
+format = " [](fg:git)[$symbol$branch](fg:text_light bg:git)[](fg:git)"
+symbol = " "
+
+[git_status]
+format = '([ ](fg:git_status)[ $all_status$ahead_behind ]($style)[](fg:git_status))'
+style = "fg:text_light bg:git_status"
+
+[docker_context]
+disabled=false
+symbol = " "
+
+[package]
+disabled=true
+
+[java]
+format = "[ ](fg:java)[$symbol$version](bg:java fg:text_color)[](fg:java)"
+version_format = "${raw}"
+symbol = " "
+disabled = false
+
+[nodejs]
+format = "[ ](fg:node)[$symbol$version]($style)[](fg:node)"
+style = "bg:node fg:text_light"
+symbol = " "
+version_format = "${raw}"
+disabled=false
+
+[rust]
+format = "[ ](fg:rust)[$symbol$version](bg:rust fg:text_color)[](fg:rust)"
+symbol = " "
+version_format = "${raw}"
+disabled=false
+
+[python]
+disabled=false
+format = '[ ](fg:python)[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\))]($style)[](fg:python)'
+symbol = " "
+version_format = "${raw}"
+style = "fg:text_light bg:python"
+
+[conda]
+format = "[ ](fg:conda)[$symbol$environment]($style)[](fg:conda)"
+style = "bg:conda fg:text_color"
+ignore_base = false
+disabled=false
+symbol = " "
+
+[c]
+format = "[ ](fg:clang)[$symbol($version(-$name) )](bg:clang fg:text_color)[](fg:clang)"
+symbol = " "
+version_format = "${raw}"
+disabled=false
+
+[os.symbols]
+Alpine = " "
+Amazon = " "
+Android = " "
+Arch = " "
+CentOS = " "
+Debian = " "
+DragonFly = " "
+Emscripten = " "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = " "
+Gentoo = " "
+Linux = " "
+Macos = " "
+Manjaro = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+openSUSE = " "
+Pop = " "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+Redox = " "
+SUSE = " "
+Ubuntu = " "
+Unknown = " "
+Windows = " "

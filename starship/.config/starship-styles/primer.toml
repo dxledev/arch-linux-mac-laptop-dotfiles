@@ -1,0 +1,105 @@
+format = """
+[](fg:bright-blue bg:bright-blue)\
+$username\
+[](fg:bright-blue bg:bright-yellow)\
+$directory\
+[](fg:bright-yellow bg:bright-red)\
+$git_branch\
+$git_status\
+[ ](fg:bright-red)\
+"""
+
+right_format = """
+[](fg:bright-purple)\
+$time\
+$all
+$character
+"""
+
+[username]
+show_always = true
+style_user = "fg:white bg:bright-blue"
+style_root = "fg:white bg:bright-blue"
+format = '[$user ]($style)'
+
+[directory]
+style = "fg:black bg:bright-yellow"
+format = "[ $path ]($style)"
+
+[git_branch]
+symbol = ""
+style = "fg:white bg:bright-red"
+format = '[ $symbol $branch ]($style)'
+
+[git_status]
+style = "fg:white bg:bright-red"
+format = '[$all_status$ahead_behind ]($style)'
+
+# Languages
+
+[c]
+symbol = ""
+style = "fg:white bg:red"
+format = '[ $symbol ($version) ]($style)'
+
+[kubernetes]
+style = "fg:white bg:bright-blue"
+format = '[ on ﴱ ($user on )($cluster in )$context \($namespace\) ]($style)'
+
+[gcloud]
+symbol = " "
+style = "fg:white bg:green"
+format = '[ on $symbol $account(@$domain)(\($region\)) ]($style) '
+
+[golang]
+symbol = ""
+style = "fg:white bg:cyan"
+format = '[ $symbol ($version) ]($style)'
+
+[java]
+symbol = ""
+style = "fg:white bg:cyan"
+format = '[ $symbol ($version) ]($style)'
+
+[lua]
+symbol = ""
+style = "fg:white bg:blue"
+format = '[ $symbol ($version) ]($style)'
+
+[nodejs]
+symbol = ""
+style = "fg:white bg:green"
+format = '[ $symbol ($version) ]($style)'
+
+[package]
+symbol = ""
+style = "fg:white bg:bright-red"
+format = '[ $symbol ($version) ]($style)'
+
+[php]
+symbol = ''
+style = "fg:white bg:bright-blue"
+format = '[ $symbol ($version) ]($style)'
+
+[python]
+symbol = ''
+style = "fg:black bg:bright-yellow"
+format = '[ $symbol ($version) ]($style)'
+
+[rust]
+symbol = ""
+style = "fg:white bg:red"
+format = '[ $symbol ($version) ]($style)'
+
+[time]
+disabled = false
+time_format = "%R"
+style = "fg:white bg:bright-purple"
+format = '[  $time ]($style)'
+
+[cmd_duration]
+style = "fg:black bg:bright-yellow"
+format = "[ took $duration ]($style)"
+
+[character]
+format = " $symbol"
